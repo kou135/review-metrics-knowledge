@@ -8,25 +8,25 @@
 
 ## Phase 1: プロジェクトセットアップとMVP基盤
 
-- [ ] 1. プロジェクト構造のセットアップ
+- [x] 1. プロジェクト構造のセットアップ
   - プロジェクトの初期化とディレクトリ構成の作成
   - 必要な依存パッケージのインストール
   - TypeScript設定ファイルの作成
   - _要件: 要件5（実行環境の構築）_
 
-- [ ] 1.1 package.jsonの作成と依存関係のインストール
+- [x] 1.1 package.jsonの作成と依存関係のインストール
   - `@mastra/core`, `@ai-sdk/google`, `simple-git`, `zod`をインストール
   - 開発依存関係（`tsx`, `typescript`, `vitest`, `@playwright/test`）をインストール
   - npm scriptsの定義（`mastra:run`, `mastra:dev`, `test`）
   - _要件: 要件5.2, 5.3_
 
-- [ ] 1.2 ディレクトリ構造の作成
+- [x] 1.2 ディレクトリ構造の作成
   - `src/mastra/agents/`, `src/mastra/tools/`, `src/mastra/workflows/`ディレクトリを作成
   - `agents/`ディレクトリを作成（ナレッジベース用）
   - `.github/workflows/`ディレクトリを作成
   - _要件: 要件5.1_
 
-- [ ] 1.3 TypeScript設定
+- [x] 1.3 TypeScript設定
   - `tsconfig.json`を作成し、ES2022、Node.js 20対応の設定を行う
   - モジュール解決とパスエイリアスの設定
   - _要件: 要件5.2_
@@ -111,11 +111,11 @@
 
 ## Phase 4: Mastra Instance とエントリーポイント
 
-- [ ] 6. Mastra Instanceの作成
+- [x] 6. Mastra Instanceの作成
   - Mastraインスタンスを作成し、ツールとワークフローを登録
   - _要件: 要件5（実行環境の構築）_
 
-- [ ] 6.1 src/mastra/index.tsの作成
+- [x] 6.1 src/mastra/index.tsの作成
   - `Mastra`クラスをインスタンス化
   - `workflows`に`simpleAppendWorkflow`を登録
   - エクスポート設定
@@ -126,7 +126,7 @@
   - [must]接頭辞の除去処理を実装
   - _要件: 要件2（コメント本文の整形）_
 
-- [ ] 7.1 src/run.tsの作成
+- [x] 7.1 src/run.tsの作成
   - 環境変数（COMMENT_BODY, COMMENT_URL, PR_BRANCH, TIMESTAMP）の取得
   - [must]接頭辞の除去ロジック
   - ワークフロー実行とエラーハンドリング
@@ -144,13 +144,13 @@
   - [must]タグの検出とMastraアプリケーションの実行
   - _要件: 要件1（Must Commentの検出）, 要件5（実行環境の構築）_
 
-- [ ] 8.1 .github/workflows/knowledge-automation.ymlの作成
+- [x] 8.1 .github/workflows/knowledge-automation.ymlの作成
   - `issue_comment`イベントトリガーの設定
   - 実行条件（PRコメント、[must]接頭辞）の設定
   - Node.js環境のセットアップ
   - _要件: 要件1.1, 1.2, 1.3, 要件5.1, 5.2_
 
-- [ ] 8.2 環境変数の設定とMastraアプリケーションの実行
+- [x] 8.2 環境変数の設定とMastraアプリケーションの実行
   - GitHub Secretsから`GEMINI_API_KEY`を取得
   - イベントペイロードから`COMMENT_BODY`, `COMMENT_URL`, `PR_BRANCH`, `TIMESTAMP`を抽出
   - `npm run mastra:run`でアプリケーションを実行

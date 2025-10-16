@@ -112,6 +112,7 @@ ${cleanedBody}
         `Gitコミット・プッシュに失敗しました: ${commitResult.error}`
       );
     }
+    console.log("b");
 
     console.log("");
     console.log("🎉 ナレッジ自動追加が完了しました！");

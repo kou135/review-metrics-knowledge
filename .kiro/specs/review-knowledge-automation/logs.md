@@ -570,3 +570,67 @@ permissions:
 
 ---
 
+### 17:00 - Gitプッシュエラーの修正
+
+**エラー発生:**
+❌ Gitプッシュが失敗
+
+**エラー詳細:**
+- **エラーメッセージ**: `error: src refspec modify does not match any`
+- **原因**: PRブランチ名の取得方法に問題
+  - `gh pr view`コマンドで取得したブランチ名が`modify`
+  - しかし、実際のブランチは存在しないか、チェックアウトされていない
+  - `github.event.issue.pull_request.head.ref`を使用すべき
+
+**調査方法:**
+- エラーログを分析
+- GitHub Actionsのイベントペイロード構造を確認
+
+**解決策:**
+- **試行1**: `gh pr view`コマンドでブランチ名を取得 → ❌ 不正確なブランチ名
+- **最終解決策**: `actions/github-script`を使用してPR APIから正確なブランチ名を取得
+
+**修正内容:**
+```yaml
+# 修正前: GitHub CLIを使用
+- name: Get PR branch name
+  id: pr-branch
+  run: |
+    PR_NUMBER=${{ github.event.issue.number }}
+    BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq .headRefName)
+    echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+# 修正後: GitHub APIを使用
+- name: Get PR details
+  id: pr-details
+  uses: actions/github-script@v7
+  with:
+    script: |
+      const pr = await github.rest.pulls.get({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        pull_number: context.issue.number
+      });
+      return {
+        branch: pr.data.head.ref
+      };
+
+# 環境変数の参照も変更
+PR_BRANCH: ${{ fromJSON(steps.pr-details.outputs.result).branch }}
+```
+
+**追加の修正:**
+- 403エラーが継続するため、成功/失敗通知のコメント投稿機能を削除
+- コア機能（ナレッジ追加）に集中
+
+**検証:**
+- 変更をコミット・プッシュ
+- 再度[must]コメントを投稿してテスト
+
+**TODO:**
+- [ ] 変更をコミット・プッシュ
+- [ ] 再度E2Eテスト
+- [ ] agents/policy.mdが更新されることを確認
+
+---
+

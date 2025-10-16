@@ -133,6 +133,7 @@ const commitChangesStep = createStep({
       commitMessage,
       branch: inputData.prBranch,
     } as any);
+    console.log("c");
 
     if (commitResult.success) {
       console.log(`✅ Gitコミット・プッシュが成功しました`);

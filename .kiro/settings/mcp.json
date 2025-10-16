@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "playwright_evaluate"
+      ]
+    },
+    "tavily-remote-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.tavily.com/mcp/?tavilyApiKey=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"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "tavily_extract"
+      ]
+    }
+  }
+}

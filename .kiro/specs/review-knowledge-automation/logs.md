@@ -468,3 +468,50 @@ await gitCommitTool.execute({ ... });  // ✅ 成功
 - [ ] タスク8.3: GitHub Actions WorkflowのE2Eテスト（Playwright MCP使用）
 
 ---
+### 16:40 - GitHub Actionsエラーの修正
+
+**エラー発生:**
+❌ GitHub Actionsが起動したが、2つのエラーが発生
+
+**エラー1: `tsx: not found`**
+- **エラーメッセージ**: `sh: 1: tsx: not found`
+- **原因**: `tsx`が`devDependencies`にインストールされていない
+- **影響**: `npm run mastra:run`が実行できない
+
+**エラー2: `Resource not accessible by integration` (403)**
+- **エラーメッセージ**: `HttpError: Resource not accessible by integration`
+- **原因**: GitHub Actionsの権限不足。コメント投稿に`issues: write`権限が必要
+- **影響**: 成功/失敗通知のコメントが投稿できない
+
+**修正内容:**
+
+1. **package.jsonに`tsx`を追加:**
+```json
+"devDependencies": {
+  "@playwright/test": "^1.56.0",
+  "@types/node": "^24.7.2",
+  "mastra": "^0.16.0",
+  "tsx": "^4.20.0",  // 追加
+  "typescript": "^5.9.3"
+}
+```
+
+2. **GitHub Actionsの権限設定を修正:**
+```yaml
+permissions:
+  contents: write
+  pull-requests: read
+  issues: write  // 追加
+```
+
+**検証:**
+- 修正内容をコミット・プッシュ
+- 再度[must]コメントを投稿してテスト
+
+**TODO:**
+- [ ] 変更をコミット・プッシュ
+- [ ] 再度[must]コメントを投稿してE2Eテスト
+- [ ] GitHub Actionsが正常に完了することを確認
+
+---
+

@@ -14,3 +14,10 @@
 関数名は動詞で始めること。
 例: getUserData(), calculateTotal()
 
+
+---
+## [追加日時: 2025/10/16 08:17:38]
+出典: https://github.com/kou135/review-metrics-knowledge/pull/5#discussion_r2435005313
+
+エラーハンドリングはしてください
+

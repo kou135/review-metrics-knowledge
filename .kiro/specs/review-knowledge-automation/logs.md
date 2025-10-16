@@ -468,3 +468,105 @@ await gitCommitTool.execute({ ... });  // ✅ 成功
 - [ ] タスク8.3: GitHub Actions WorkflowのE2Eテスト（Playwright MCP使用）
 
 ---
+### 16:40 - GitHub Actionsエラーの修正
+
+**エラー発生:**
+❌ GitHub Actionsが起動したが、2つのエラーが発生
+
+**エラー1: `tsx: not found`**
+- **エラーメッセージ**: `sh: 1: tsx: not found`
+- **原因**: `tsx`が`devDependencies`にインストールされていない
+- **影響**: `npm run mastra:run`が実行できない
+
+**エラー2: `Resource not accessible by integration` (403)**
+- **エラーメッセージ**: `HttpError: Resource not accessible by integration`
+- **原因**: GitHub Actionsの権限不足。コメント投稿に`issues: write`権限が必要
+- **影響**: 成功/失敗通知のコメントが投稿できない
+
+**修正内容:**
+
+1. **package.jsonに`tsx`を追加:**
+```json
+"devDependencies": {
+  "@playwright/test": "^1.56.0",
+  "@types/node": "^24.7.2",
+  "mastra": "^0.16.0",
+  "tsx": "^4.20.0",  // 追加
+  "typescript": "^5.9.3"
+}
+```
+
+2. **GitHub Actionsの権限設定を修正:**
+```yaml
+permissions:
+  contents: write
+  pull-requests: read
+  issues: write  // 追加
+```
+
+**検証:**
+- 修正内容をコミット・プッシュ
+- 再度[must]コメントを投稿してテスト
+
+**TODO:**
+- [ ] 変更をコミット・プッシュ
+- [ ] 再度[must]コメントを投稿してE2Eテスト
+- [ ] GitHub Actionsが正常に完了することを確認
+
+---
+
+### 16:50 - GitHub Actionsエラーの再調査と修正
+
+**Tavily MCP 使用:**
+✅ Tavily MCPを使用してエラー調査を実施しました
+
+**Tavily 検索内容:**
+
+1. **検索クエリ**: "GitHub Actions issue_comment Resource not accessible by integration 403 error permissions"
+   - **検索目的**: 403エラーの根本原因を特定するため
+   - **使用したツール**: `tavily_search`
+   - **検索パラメータ**:
+     - `max_results`: 5
+     - `search_depth`: advanced
+
+2. **検索クエリ**: "GitHub Actions workflow permissions read and write settings repository"
+   - **検索目的**: リポジトリレベルの権限設定を確認するため
+   - **使用したツール**: `tavily_search`
+
+**Tavily 検索結果:**
+
+1. **重要な発見**:
+   - 発見1: リポジトリの設定で「Workflow permissions」がデフォルトで「Read-only」になっている可能性
+   - 発見2: ワークフローファイルで`issues: write`を指定しても、リポジトリレベルの設定で制限される
+   - 発見3: Settings > Actions > General > Workflow permissions で「Read and write permissions」に変更する必要がある
+   - **参考URL**:
+     - https://github.com/orgs/community/discussions/169512
+     - https://github.com/github/codeql/issues/20487
+
+**調査結果の適用:**
+
+**エラー1: `npm ci` の失敗**
+- **問題**: `package-lock.json`が`package.json`と同期していない
+- **原因**: `tsx`を追加したが、`package-lock.json`が更新されていない
+- **解決策**: `npm install`を実行
+- **結果**: ✅ `package-lock.json`が更新され、`tsx@4.20.6`が追加された
+
+**エラー2: `Resource not accessible by integration` (403)**
+- **問題**: コメント投稿時に403エラー
+- **原因**: リポジトリの「Workflow permissions」が「Read-only」に設定されている
+- **解決策**: GitHubリポジトリの設定を変更
+  1. Settings > Actions > General
+  2. Workflow permissions > **Read and write permissions** を選択
+  3. Save
+
+**修正内容:**
+1. ✅ `npm install`を実行して`package-lock.json`を更新
+2. ⏳ GitHubリポジトリの設定変更（手動）
+
+**次のステップ:**
+1. GitHubリポジトリの設定を変更（Workflow permissions）
+2. 変更をコミット・プッシュ
+3. 再度[must]コメントを投稿してE2Eテスト
+
+---
+

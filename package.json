@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
     "build": "mastra build",
-    "start": "mastra start"
+    "start": "mastra start",
+    "mastra:run": "tsx src/run.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "@mastra/libsql": "^0.15.2",
     "@mastra/loggers": "^0.10.16",
     "@mastra/memory": "^0.15.7",
+    "simple-git": "^3.28.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
